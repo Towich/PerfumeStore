@@ -22,9 +22,11 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = White_F8,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
+    background = White_F8,
+    surface = White
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -56,7 +58,7 @@ fun PerfumeStoreTheme(
     if (!view.isInEditMode) {
         SideEffect {
           (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-          ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+          ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme
         }
     }
 
