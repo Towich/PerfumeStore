@@ -13,12 +13,15 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,12 +34,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
+        
+        val list: MutableList<ProductItem> = mutableListOf()
+        var id = 0
+        list.add(ProductItem(id++, R.drawable.tiziana_terenzi, "Kirke", 300f, 700f, 1))
+        list.add(ProductItem(id++, R.drawable.kirke_box, "Lost Cherry", 300f, 850f, 2))
+        list.add(ProductItem(id++, R.drawable.tiziana_terenzi, "Pitter Peach", 300f, 749.99f, 3))
+        list.add(ProductItem(id++, R.drawable.kirke_box, "L.12.12", 300f, 699.99f, 4))
+        list.add(ProductItem(id++, R.drawable.tiziana_terenzi, "Tobacco Vanille", 300f, 700f, 5))
+        
         setContent {
             PerfumeStoreTheme {
-                StartScreen()
+                StartScreen(list)
             }
         }
     }
@@ -44,22 +53,16 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun StartScreen() {
-
-    val list: MutableList<ProductItem> = mutableListOf()
-    var id = 0
-    list.add(ProductItem(id++, 0, "0", 0f, 0f, 0))
-    list.add(ProductItem(id++, 0, "0", 0f, 0f, 0))
-    list.add(ProductItem(id++, 0, "0", 0f, 0f, 0))
-    list.add(ProductItem(id++, 0, "0", 0f, 0f, 0))
-    list.add(ProductItem(id++, 0, "0", 0f, 0f, 0))
-
+fun StartScreen(
+    list: List<ProductItem>
+) {
+    
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Home",
+                        text = "Дом",
                         fontWeight = FontWeight.SemiBold
                     )
                 },
@@ -105,7 +108,7 @@ fun StartScreen() {
         }
     ) {
         Text(
-            text = "Perfumes",
+            text = "Парфюмерия",
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
@@ -128,10 +131,10 @@ fun StartScreen() {
                     item.hashCode()
                 }
             ) { _, item ->
-                ProductCard(productItem = item)
+                ProductCard(
+                    productItem = item
+                )
             }
-
-
         }
     }
 }
@@ -154,26 +157,52 @@ fun ProductCard(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.tiziana_terenzi),
-                contentDescription = "Tiziana Terenzi",
+                painter = painterResource(id = productItem.imageId),
+                contentDescription = productItem.name,
                 modifier = Modifier.size(75.dp, 150.dp)
             )
         }
 
-
         Text(
-            text = "Kirke",
+            text = productItem.name,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
-                .padding(start = 20.dp, top = 20.dp)
+                .padding(start = 10.dp, top = 20.dp)
         )
 
-        Text(
-            text = "700 руб.",
-            color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.SemiBold,
+        Row(
             modifier = Modifier
-                .padding(start = 20.dp, bottom = 20.dp)
-        )
+                .fillMaxWidth()
+                .padding(start = 10.dp, bottom = 10.dp, end = 10.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ){
+            Column() {
+                Text(
+                    text = "${productItem.sell_price} руб.",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.SemiBold,
+                )
+
+                Text(
+                    text = "Склад: ${productItem.quantity} шт.",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .size(32.dp),
+                shape = CircleShape,
+            ) {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add perfume"
+                )
+            }
+        }
     }
 }
