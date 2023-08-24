@@ -4,7 +4,10 @@ data class ProductItem(
     val id: Int,
     val imageId: Int,
     val name: String,
+    val producer: String,
     val buy_price: Float,
     val sell_price: Float,
-    val quantity: Int
+    val quantity: Int,
+    val volume: Int,
+    val description: String
 )
