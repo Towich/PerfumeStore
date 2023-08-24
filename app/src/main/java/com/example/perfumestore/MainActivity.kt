@@ -17,7 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +35,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.perfumestore.data.model.ProductItem
 import com.example.perfumestore.ui.theme.PerfumeStoreTheme
 import com.example.perfumestore.ui.theme.White
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
 
@@ -122,24 +129,13 @@ class MainActivity : ComponentActivity() {
                     composable("Home") {
                         StartScreen(
                             navController = navController,
-                            list = list,
                             mViewModel = mViewModel
                         )
                     }
                     composable("Product") {
                         ProductScreen(
                             navController = navController,
-                            productItem = mViewModel.currentProduct ?: ProductItem(
-                                id++,
-                                R.drawable.kirke,
-                                "error",
-                                "error",
-                                0f,
-                                0f,
-                                0,
-                                0,
-                                ""
-                            )
+                            productItem = mViewModel.currentProduct ?: ProductItem()
                         )
                     }
                 }
@@ -153,7 +149,7 @@ class MainActivity : ComponentActivity() {
 fun StartScreen(
     mViewModel: MainViewModel,
     navController: NavController,
-    list: List<ProductItem>
+    database: FirebaseDatabase = Firebase.database
 ) {
 
     Scaffold(
@@ -205,35 +201,61 @@ fun StartScreen(
             )
         }
     ) {
-//        Text(
-//            text = "Парфюмерия",
-//            fontWeight = FontWeight.SemiBold,
-//            style = MaterialTheme.typography.titleLarge,
-//            color = MaterialTheme.colorScheme.onBackground,
-//            modifier = Modifier
-//                .padding(it)
-//                .padding(start = 20.dp)
-//        )
+        PerfumesList(
+            innerPadding = it,
+            mViewModel = mViewModel,
+            navController = navController,
+            database = database
+        )
+    }
+}
 
-        LazyVerticalGrid(
-            state = rememberLazyGridState(),
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .padding(it),
-            contentPadding = PaddingValues(10.dp)
-        ) {
-            itemsIndexed(
-                items = list,
-                key = { _: Int, item: ProductItem ->
-                    item.hashCode()
-                }
-            ) { _, item ->
-                ProductCard(
-                    mViewModel = mViewModel,
-                    navController = navController,
-                    productItem = item
-                )
+@Composable
+fun PerfumesList(
+    innerPadding: PaddingValues,
+    mViewModel: MainViewModel,
+    navController: NavController,
+    database: FirebaseDatabase
+) {
+    var list: List<ProductItem> by remember { mutableStateOf(listOf()) }
+
+    // Connect our perfume list to perfume list from Firebase
+    val myRef = database.getReference("perfumes")
+    myRef.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val value = snapshot.getValue<List<ProductItem>>()
+            list = value ?: listOf(
+                ProductItem()
+            )
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            list = listOf(
+                ProductItem()
+            )
+        }
+    })
+
+    // Show all perfumes
+    LazyVerticalGrid(
+        state = rememberLazyGridState(),
+        columns = GridCells.Fixed(2),
+        modifier = Modifier
+            .padding(innerPadding),
+        contentPadding = PaddingValues(10.dp)
+    ) {
+
+        itemsIndexed(
+            items = list,
+            key = { _: Int, item: ProductItem ->
+                item.hashCode()
             }
+        ) { _, item ->
+            ProductCard(
+                mViewModel = mViewModel,
+                navController = navController,
+                productItem = item
+            )
         }
     }
 }
@@ -283,7 +305,7 @@ fun ProductCard(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column() {
+            Column {
                 Text(
                     text = String.format("%.2f", productItem.sell_price) + " руб.",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -314,8 +336,11 @@ fun ProductCard(
 
             }
 
+            // FAB
             FloatingActionButton(
-                onClick = { },
+                onClick = {
+
+                },
                 modifier = Modifier
                     .size(32.dp),
                 shape = CircleShape,
@@ -331,7 +356,6 @@ fun ProductCard(
     }
 }
 
-
 @Composable
 fun ProductScreen(
     navController: NavController,
@@ -343,18 +367,22 @@ fun ProductScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
+        // Actions
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 5.dp)
         ) {
             IconButton(
-                onClick = { navController.navigateUp() }
+                onClick = {
+                    navController.navigateUp()
+                }
             ) {
                 Icon(imageVector = Icons.Sharp.ArrowBack, contentDescription = "Back arrow")
             }
         }
 
+        // Image
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
@@ -366,6 +394,8 @@ fun ProductScreen(
                     .heightIn(min = 300.dp, max = 400.dp)
             )
         }
+
+        // Surface like BottomSheet
         Surface(
             shape = RoundedCornerShape(topStart = 45.dp, topEnd = 45.dp),
             modifier = Modifier
@@ -458,6 +488,7 @@ fun ProductScreen(
 
                 }
 
+                // Description
                 Text(
                     text = "Описание",
                     style = MaterialTheme.typography.titleMedium,
@@ -476,12 +507,13 @@ fun ProductScreen(
 
             }
 
+            // FAB
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(20.dp),
                 contentAlignment = Alignment.BottomEnd
-            ){
+            ) {
                 FloatingActionButton(
                     onClick = { /*TODO*/ },
                     containerColor = MaterialTheme.colorScheme.primary,
