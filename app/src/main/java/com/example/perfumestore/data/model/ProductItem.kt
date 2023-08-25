@@ -6,8 +6,8 @@ data class ProductItem(
     val name: String = "",
     val producer: String = "",
     val buy_price: Float = 0f,
-    val sell_price: Float = 0f,
-    val quantity: Int = 0,
+    var sell_price: Float = 0f,
+    var quantity: Int = 0,
     val volume: Int = 0,
     val description: String = ""
 )
