@@ -162,6 +162,7 @@ fun ProductCard(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         onClick = {
+            mViewModel.fromCart = false
             mViewModel.currentProduct = productItem
             navController.navigate("Product")
         }

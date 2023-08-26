@@ -1,11 +1,8 @@
 package com.example.perfumestore.ui.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.ArrowBack
 import androidx.compose.material3.*
@@ -75,6 +72,7 @@ fun CartScreen(
             for (item in itemsInCart) {
                 ProductInCart(
                     mViewModel = mViewModel,
+                    navController = navController,
                     productItem = item,
                     onChangeQuantity = {
                         totalSum = mViewModel.getTotalCartSum()
@@ -142,6 +140,7 @@ fun CartScreen(
 @Composable
 fun ProductInCart(
     mViewModel: MainViewModel,
+    navController: NavController,
     productItem: ProductItem,
     onChangeQuantity: () -> Unit,
     onRemoveItem: (productItem: ProductItem) -> Unit
@@ -152,6 +151,11 @@ fun ProductInCart(
             .fillMaxWidth()
             .height(125.dp)
             .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+            .clickable {
+                mViewModel.fromCart = true
+                mViewModel.currentProduct = productItem
+                navController.navigate("Product")
+            }
     ) {
         Row(
             modifier = Modifier

@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,24 +65,26 @@ fun ProductScreen(
                 },
                 actions = {
                     // Settings
-                    Box(
-                        modifier = Modifier
-                            .padding(end = 10.dp)
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(color = MaterialTheme.colorScheme.surface)
-                            .clickable {
-                                showingBottomSheet = true
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Setting",
-                            tint = MaterialTheme.colorScheme.onBackground,
+                    if (!mViewModel.fromCart) {
+                        Box(
                             modifier = Modifier
-                                .size(24.dp)
-                        )
+                                .padding(end = 10.dp)
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface)
+                                .clickable {
+                                    showingBottomSheet = true
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "Setting",
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier
+                                    .size(24.dp)
+                            )
+                        }
                     }
                 }
             )
@@ -157,9 +160,19 @@ fun ProductScreen(
                             Text(
                                 text = productItem.quantity.toString() + " шт."
                             )
+
+                            val mPainter: Painter
+                            val mContentDescription: String
+                            if (mViewModel.fromCart) {
+                                mPainter = painterResource(id = R.drawable.shopping_cart_2)
+                                mContentDescription = "In cart"
+                            } else {
+                                mPainter = painterResource(id = R.drawable.boxes)
+                                mContentDescription = "Boxes"
+                            }
                             Icon(
-                                painter = painterResource(id = R.drawable.boxes),
-                                contentDescription = "Boxes",
+                                painter = mPainter,
+                                contentDescription = mContentDescription,
                                 tint = Color.Unspecified,
                                 modifier = Modifier
                                     .size(26.dp)

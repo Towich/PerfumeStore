@@ -14,6 +14,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var currentProduct: ProductItem? = null
     var itemsInCart: MutableList<ProductItem> =
         LocalPerfumes().createList() as MutableList<ProductItem>
+    var fromCart: Boolean = false
 
     fun getDatabase(): FirebaseDatabase = repository.getDatabase()
     fun getPerfumesListReference(): DatabaseReference = repository.getPerfumesListReference()
