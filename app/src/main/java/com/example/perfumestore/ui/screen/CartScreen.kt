@@ -116,7 +116,12 @@ fun CartScreen(
             // Button "Order now"
             Button(
                 onClick = {
-
+                    var orderText: String = "У Вас новый заказ! Стоимость: " + String.format("%.2f", mViewModel.getTotalCartSum()) + " руб."
+                    for(item in mViewModel.itemsInCart){
+                        orderText += "\n~ ${item.producer} ${item.name}, ${item.quantity} шт."
+                    }
+                    mViewModel.sendMessageToTelegram(orderText)
+                    navController.navigate("FinishOrder")
                 },
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, top = 40.dp, bottom = 10.dp)

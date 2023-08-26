@@ -3,10 +3,13 @@ package com.example.perfumestore
 import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import com.example.perfumestore.data.LocalPerfumes
+import androidx.lifecycle.viewModelScope
+import com.example.perfumestore.data.source.LocalPerfumes
 import com.example.perfumestore.data.model.ProductItem
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MainRepository = MainRepository()
@@ -65,5 +68,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         return sum
+    }
+
+    fun sendMessageToTelegram(message: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.sendMessageToTelegram(message)
+        }
     }
 }

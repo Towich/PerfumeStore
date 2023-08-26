@@ -80,4 +80,13 @@ dependencies {
 
     // Declare the dependencies for the desired Firebase products without specifying versions
     implementation("com.google.firebase:firebase-database-ktx")
+
+    // Ktor
+    implementation "io.ktor:ktor-client-okhttp:2.3.3"
+    implementation "io.ktor:ktor-client-content-negotiation:2.3.3"
+    implementation "io.ktor:ktor-serialization-kotlinx-json:2.3.3"
+    implementation "io.ktor:ktor-client-logging:2.3.3"
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2'
 }

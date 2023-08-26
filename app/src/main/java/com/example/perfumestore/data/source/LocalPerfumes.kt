@@ -1,4 +1,4 @@
-package com.example.perfumestore.data
+package com.example.perfumestore.data.source
 
 import com.example.perfumestore.R
 import com.example.perfumestore.data.model.ProductItem
