@@ -146,8 +146,6 @@ fun ProductInCart(
     onChangeQuantity: () -> Unit,
     onRemoveItem: (productItem: ProductItem) -> Unit
 ) {
-    var currentQuantity: Int by remember { mutableStateOf(productItem.quantity) }
-
     Surface(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -225,8 +223,7 @@ fun ProductInCart(
                     // Button "Add"
                     IconButton(
                         onClick = {
-                            currentQuantity++
-                            productItem.quantity = currentQuantity
+                            productItem.quantity = productItem.quantity + 1
                             onChangeQuantity()
                         },
                         modifier = Modifier
@@ -242,26 +239,20 @@ fun ProductInCart(
 
                     // Text with quantity
                     Text(
-                        text = currentQuantity.toString(),
+                        text = productItem.quantity.toString(),
                         fontWeight = FontWeight.Bold
                     )
 
                     // Button "Minus"
                     IconButton(
                         onClick = {
-                            currentQuantity--
-                            productItem.quantity = currentQuantity
-
+                            productItem.quantity = productItem.quantity - 1
                             onChangeQuantity()
 
-                            if (currentQuantity < 1) {
-                                val currIndex = mViewModel.itemsInCart.indexOf(productItem)
+                            if (productItem.quantity < 1) {
                                 mViewModel.itemsInCart =
                                     mViewModel.itemsInCart.minus(productItem) as MutableList<ProductItem>
                                 onRemoveItem(productItem)
-
-                                if (currIndex != mViewModel.itemsInCart.size)
-                                    currentQuantity = mViewModel.itemsInCart[currIndex].quantity
                             }
                         },
                         modifier = Modifier

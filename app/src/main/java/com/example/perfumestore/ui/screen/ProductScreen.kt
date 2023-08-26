@@ -87,8 +87,6 @@ fun ProductScreen(
             )
         }
     ) {
-
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -228,7 +226,9 @@ fun ProductScreen(
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     FloatingActionButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            mViewModel.addToCart(productItem)
+                        },
                         containerColor = MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(100),
                         modifier = Modifier
@@ -279,14 +279,14 @@ fun SettingsBottomSheet(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Column(){
+            Column() {
 
                 // Perfume Name
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Text(
                         text = productItem.name,
                         style = MaterialTheme.typography.titleLarge,

@@ -234,7 +234,7 @@ fun ProductCard(
             // FAB
             FloatingActionButton(
                 onClick = {
-                    onClickFAB(productItem.id)
+                    mViewModel.addToCart(productItem)
                 },
                 modifier = Modifier
                     .size(32.dp),
