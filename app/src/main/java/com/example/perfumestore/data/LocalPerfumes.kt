@@ -1,5 +1,6 @@
-package com.example.perfumestore
+package com.example.perfumestore.data
 
+import com.example.perfumestore.R
 import com.example.perfumestore.data.model.ProductItem
 
 class LocalPerfumes{

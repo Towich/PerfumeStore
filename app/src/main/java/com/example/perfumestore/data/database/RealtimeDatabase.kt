@@ -1,4 +1,4 @@
-package com.example.perfumestore
+package com.example.perfumestore.data.database
 
 import com.example.perfumestore.data.model.ProductItem
 import com.google.firebase.database.DatabaseReference
