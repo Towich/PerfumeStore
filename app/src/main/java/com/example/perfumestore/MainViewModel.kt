@@ -1,10 +1,8 @@
 package com.example.perfumestore
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.perfumestore.data.source.LocalPerfumes
 import com.example.perfumestore.data.model.ProductItem
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -15,10 +13,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MainRepository = MainRepository()
 
     var currentProduct: ProductItem? = null
-    var itemsInCart: MutableList<ProductItem> =
-        LocalPerfumes().createList() as MutableList<ProductItem>
     var fromCart: Boolean = false
 
+    fun getItemsInCart(): MutableList<ProductItem> = repository.getItemsInCart()
+    fun setItemsInCart(newList: MutableList<ProductItem>){
+        repository.setItemsInCart(newList)
+    }
+    fun clearItemsInCart(){
+        repository.clearItemsInCart()
+    }
     fun getDatabase(): FirebaseDatabase = repository.getDatabase()
     fun getPerfumesListReference(): DatabaseReference = repository.getPerfumesListReference()
 
@@ -26,51 +29,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         repository.updateQuantityOfProduct(productItem, newQuantity)
     }
 
+    fun increaseQuantityInCart(productItem: ProductItem, updateUI: () -> Unit){
+        repository.increaseQuantityInCart(productItem, updateUI, getApplication())
+    }
+
+    fun updateQuantityOfProducts() {
+        repository.updateQuantityOfProducts(repository.getItemsInCart())
+    }
+
     fun updateSellPriceOfProduct(productItem: ProductItem, newSellPrice: Float) {
         repository.updateSellPriceOfProduct(productItem, newSellPrice)
     }
 
     fun addToCart(productItem: ProductItem) {
-        var productInCartIndex: Int? = null
-
-        for (i in 0 until itemsInCart.size) {
-            if (itemsInCart[i].id == productItem.id) {
-                productInCartIndex = i
-                break
-            }
-        }
-
-        if (productInCartIndex != null) {
-            itemsInCart[productInCartIndex].quantity++
-
-            Toast.makeText(
-                getApplication(),
-                "Добавлен ${itemsInCart[productInCartIndex].name}! В корзине: ${itemsInCart[productInCartIndex].quantity} шт.",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            productItem.quantity = 1
-            itemsInCart.add(productItem)
-
-            Toast.makeText(
-                getApplication(),
-                "Добавлен ${productItem.name} в корзину!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        repository.addToCart(productItem, getApplication())
     }
 
-    fun getTotalCartSum(): Float {
-        var sum = 0f
+    fun getTotalCartSum(): Float = repository.getTotalCartSum()
 
-        for (item in itemsInCart) {
-            sum += item.sell_price * item.quantity
+    fun sendMessageNewOrderToTelegram() {
+        var orderText: String =
+            "У Вас новый заказ! Стоимость: " + String.format("%.2f", getTotalCartSum()) + " руб."
+        for (item in repository.getItemsInCart()) {
+            orderText += "\n~ ${item.producer} ${item.name}, ${item.volume} мл, ${item.quantity} шт."
         }
-
-        return sum
+        sendMessageToTelegram(orderText)
     }
 
-    fun sendMessageToTelegram(message: String){
+    private fun sendMessageToTelegram(message: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.sendMessageToTelegram(message)
         }

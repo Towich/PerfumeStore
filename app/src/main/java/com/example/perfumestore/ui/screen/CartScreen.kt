@@ -17,7 +17,6 @@ import androidx.navigation.NavController
 import com.example.perfumestore.MainViewModel
 import com.example.perfumestore.R
 import com.example.perfumestore.data.model.ProductItem
-import com.example.perfumestore.ui.theme.White
 
 /**
  * Shopping cart screen.
@@ -29,7 +28,7 @@ fun CartScreen(
     mViewModel: MainViewModel,
     navController: NavController
 ) {
-    var itemsInCart: MutableList<ProductItem> by remember { mutableStateOf(mViewModel.itemsInCart) }
+    var itemsInCart: MutableList<ProductItem> by remember { mutableStateOf(mViewModel.getItemsInCart()) }
     var totalSum: Float by remember { mutableStateOf(mViewModel.getTotalCartSum()) }
 
     Scaffold(
@@ -116,12 +115,12 @@ fun CartScreen(
             // Button "Order now"
             Button(
                 onClick = {
-                    var orderText: String = "У Вас новый заказ! Стоимость: " + String.format("%.2f", mViewModel.getTotalCartSum()) + " руб."
-                    for(item in mViewModel.itemsInCart){
-                        orderText += "\n~ ${item.producer} ${item.name}, ${item.quantity} шт."
+                    if(mViewModel.getItemsInCart().size != 0) {
+                        mViewModel.updateQuantityOfProducts()
+                        mViewModel.sendMessageNewOrderToTelegram()
+                        navController.navigate("FinishOrder")
+                        mViewModel.clearItemsInCart()
                     }
-                    mViewModel.sendMessageToTelegram(orderText)
-                    navController.navigate("FinishOrder")
                 },
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, top = 40.dp, bottom = 10.dp)
@@ -232,8 +231,13 @@ fun ProductInCart(
                     // Button "Add"
                     IconButton(
                         onClick = {
-                            productItem.quantity = productItem.quantity + 1
-                            onChangeQuantity()
+                            mViewModel.increaseQuantityInCart(
+                                productItem = productItem,
+                                updateUI = {
+                                    productItem.quantity = productItem.quantity + 1
+                                    onChangeQuantity()
+                                }
+                            )
                         },
                         modifier = Modifier
                             .size(22.dp)
@@ -241,9 +245,8 @@ fun ProductInCart(
                         Icon(
                             painter = painterResource(id = R.drawable.add_48px),
                             contentDescription = "Add",
-                            tint = MaterialTheme.colorScheme.primary,
-
-                            )
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
 
                     // Text with quantity
@@ -259,8 +262,10 @@ fun ProductInCart(
                             onChangeQuantity()
 
                             if (productItem.quantity < 1) {
-                                mViewModel.itemsInCart =
-                                    mViewModel.itemsInCart.minus(productItem) as MutableList<ProductItem>
+                                mViewModel.setItemsInCart(
+                                    mViewModel.getItemsInCart()
+                                        .minus(productItem) as MutableList<ProductItem>
+                                )
                                 onRemoveItem(productItem)
                             }
                         },
