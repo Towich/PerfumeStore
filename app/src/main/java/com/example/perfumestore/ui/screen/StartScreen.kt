@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.SubcomposeAsyncImage
 import com.example.perfumestore.MainViewModel
 import com.example.perfumestore.R
 import com.example.perfumestore.data.model.ProductItem
@@ -175,9 +176,12 @@ fun ProductCard(
                 .padding(top = 20.dp),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.tom_ford_lost_cherry),
-                contentDescription = productItem.name,
+            SubcomposeAsyncImage(
+                model = productItem.imageUrl,
+                contentDescription = null,
+                loading = {
+                    CircularProgressIndicator()
+                },
                 modifier = Modifier.heightIn(max = 200.dp)
             )
         }

@@ -81,6 +81,7 @@ dependencies {
 
     // Declare the dependencies for the desired Firebase products without specifying versions
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
     // Ktor
     implementation "io.ktor:ktor-client-okhttp:2.3.3"
@@ -90,4 +91,8 @@ dependencies {
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2'
+
+    // Download images
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 }

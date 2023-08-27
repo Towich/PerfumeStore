@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.SubcomposeAsyncImage
 import com.example.perfumestore.MainViewModel
 import com.example.perfumestore.R
 import com.example.perfumestore.data.model.ProductItem
@@ -170,9 +171,12 @@ fun ProductInCart(
 
             Row {
                 // Image of Product
-                Image(
-                    painter = painterResource(id = R.drawable.tom_ford_lost_cherry),
+                SubcomposeAsyncImage(
+                    model = productItem.imageUrl,
                     contentDescription = "image",
+                    loading = {
+                        CircularProgressIndicator()
+                    },
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .width(80.dp)

@@ -11,7 +11,7 @@ class LocalPerfumes{
         list.add(
             ProductItem(
                 id++,
-                R.drawable.kirke,
+                "",
                 "Kirke",
                 "Tiziana Terenzi",
                 300f,
@@ -24,7 +24,7 @@ class LocalPerfumes{
         list.add(
             ProductItem(
                 id++,
-                R.drawable.tom_ford_lost_cherry,
+                "",
                 "Lost Cherry",
                 "Tom Ford",
                 300f,
@@ -41,7 +41,7 @@ class LocalPerfumes{
         list.add(
             ProductItem(
                 id++,
-                R.drawable.tom_ford_bitter_peach,
+                "",
                 "Bitter Peach",
                 "Tom Ford",
                 300f,
@@ -54,7 +54,7 @@ class LocalPerfumes{
         list.add(
             ProductItem(
                 id++,
-                R.drawable.l1212,
+                "",
                 "L.12.12",
                 "LACOSTE",
                 300f,
@@ -67,7 +67,7 @@ class LocalPerfumes{
         list.add(
             ProductItem(
                 id++,
-                R.drawable.tom_ford_tobacco_vanille,
+                "",
                 "Tobacco Vanille",
                 "Tom Ford",
                 300f,

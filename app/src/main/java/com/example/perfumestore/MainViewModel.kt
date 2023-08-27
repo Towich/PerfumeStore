@@ -1,13 +1,19 @@
 package com.example.perfumestore
 
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.perfumestore.data.model.ProductItem
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.StreamDownloadTask
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.util.concurrent.Flow
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MainRepository = MainRepository()
@@ -16,12 +22,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var fromCart: Boolean = false
 
     fun getItemsInCart(): MutableList<ProductItem> = repository.getItemsInCart()
-    fun setItemsInCart(newList: MutableList<ProductItem>){
+    fun setItemsInCart(newList: MutableList<ProductItem>) {
         repository.setItemsInCart(newList)
     }
-    fun clearItemsInCart(){
+
+    fun clearItemsInCart() {
         repository.clearItemsInCart()
     }
+
     fun getDatabase(): FirebaseDatabase = repository.getDatabase()
     fun getPerfumesListReference(): DatabaseReference = repository.getPerfumesListReference()
 
@@ -29,7 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         repository.updateQuantityOfProduct(productItem, newQuantity)
     }
 
-    fun increaseQuantityInCart(productItem: ProductItem, updateUI: () -> Unit){
+    fun increaseQuantityInCart(productItem: ProductItem, updateUI: () -> Unit) {
         repository.increaseQuantityInCart(productItem, updateUI, getApplication())
     }
 
@@ -60,5 +68,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.sendMessageToTelegram(message)
         }
+    }
+
+    fun downloadImageFromStorage(it: StreamDownloadTask.TaskSnapshot): Bitmap? {
+        var bitmap: Bitmap? = null
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val job = async { BitmapFactory.decodeStream(it.stream) }
+            bitmap = job.await()
+        }
+
+        return bitmap
     }
 }
