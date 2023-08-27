@@ -171,7 +171,7 @@ fun ProductInCart(
             Row {
                 // Image of Product
                 Image(
-                    painter = painterResource(id = productItem.imageId),
+                    painter = painterResource(id = R.drawable.tom_ford_lost_cherry),
                     contentDescription = "image",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier

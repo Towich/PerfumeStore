@@ -176,7 +176,7 @@ fun ProductCard(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = productItem.imageId),
+                painter = painterResource(id = R.drawable.tom_ford_lost_cherry),
                 contentDescription = productItem.name,
                 modifier = Modifier.heightIn(max = 200.dp)
             )

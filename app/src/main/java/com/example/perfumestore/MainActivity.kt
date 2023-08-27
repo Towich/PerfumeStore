@@ -3,6 +3,8 @@ package com.example.perfumestore
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -24,8 +26,25 @@ class MainActivity : ComponentActivity() {
             PerfumeStoreTheme {
                 val navController = rememberNavController()
                 val mViewModel: MainViewModel = viewModel()
-                NavHost(navController = navController, startDestination = "Start") {
-                    composable("Start") {
+                NavHost(
+                    navController = navController,
+                    startDestination = "Start",
+                    enterTransition = {
+                        fadeIn()
+                    },
+                    exitTransition = {
+                        fadeOut()
+                    },
+                    popEnterTransition = {
+                        fadeIn()
+                    },
+                    popExitTransition = {
+                        fadeOut()
+                    }
+                ) {
+                    composable(
+                        route = "Start"
+                    ) {
                         StartScreen(
                             navController = navController,
                             mViewModel = mViewModel
