@@ -116,7 +116,7 @@ fun CartScreen(
             // Button "Order now"
             Button(
                 onClick = {
-                    if(mViewModel.getItemsInCart().size != 0) {
+                    if (mViewModel.getItemsInCart().size != 0) {
                         mViewModel.updateQuantityOfProducts()
                         mViewModel.sendMessageNewOrderToTelegram()
                         navController.navigate("FinishOrder")

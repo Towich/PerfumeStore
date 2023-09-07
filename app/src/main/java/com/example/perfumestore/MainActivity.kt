@@ -14,6 +14,7 @@ import com.example.perfumestore.data.model.ProductItem
 import com.example.perfumestore.ui.screen.CartScreen
 import com.example.perfumestore.ui.screen.FinishOrderScreen
 import com.example.perfumestore.ui.screen.ProductScreen
+import com.example.perfumestore.ui.screen.ProfileScreen
 import com.example.perfumestore.ui.screen.StartScreen
 import com.example.perfumestore.ui.theme.PerfumeStoreTheme
 
@@ -65,6 +66,12 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("FinishOrder"){
                         FinishOrderScreen(
+                            mViewModel = mViewModel,
+                            navController = navController
+                        )
+                    }
+                    composable("Profile"){
+                        ProfileScreen(
                             mViewModel = mViewModel,
                             navController = navController
                         )

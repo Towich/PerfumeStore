@@ -81,7 +81,7 @@ fun StartScreen(
                             .size(36.dp)
                             .clip(CircleShape)
                             .clickable {
-                                //navController.navigate("Product")
+                                navController.navigate("Profile")
                             }
                     )
                 }
