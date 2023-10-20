@@ -95,6 +95,7 @@ fun ProductScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .padding(it)
         ) {
 
             // Image

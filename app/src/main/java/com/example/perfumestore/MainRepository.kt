@@ -7,6 +7,10 @@ import com.example.perfumestore.data.database.RealtimeDatabase
 import com.example.perfumestore.data.model.ProductItem
 import com.example.perfumestore.data.source.LocalPerfumes
 import com.example.perfumestore.data.source.TelegramApi
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.ktor.client.*
@@ -16,6 +20,7 @@ class MainRepository {
     private var itemsInCart: MutableList<ProductItem> = mutableListOf()
     private val realtimeDatabase: RealtimeDatabase = RealtimeDatabase()
     private val telegramApi: TelegramApi = TelegramApi(HttpClient())
+    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     fun getItemsInCart(): MutableList<ProductItem> = itemsInCart
 
@@ -70,7 +75,6 @@ class MainRepository {
 
         return sum
     }
-
 
     fun addToCart(productItem: ProductItem, application: Application) {
         realtimeDatabase.getPerfumesListReference().child(productItem.id.toString())
@@ -133,5 +137,30 @@ class MainRepository {
             .addOnFailureListener {
                 Log.e("RealtimeDatabase", "Error in getting the quantity of ${productItem.name}!")
             }
+    }
+
+    // Account functions
+    fun isLoggedIntoAccount(): Boolean = mAuth.currentUser != null
+
+    fun registerViaEmailPassword(email: String, password: String, onCompleted: (task: Task<AuthResult>) -> Unit){
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            onCompleted(it)
+        }
+    }
+
+    fun signInViaEmailPassword(email: String, password: String, onCompleted: (task: Task<AuthResult>) -> Unit){
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            onCompleted(it)
+        }
+    }
+
+    fun getNameAccount(): String = mAuth.currentUser?.displayName ?: "null"
+
+    fun logOutFromAccount(){
+//        mAuth.currentUser?.updateProfile(userProfileChangeRequest {
+//            displayName = "Nikita Novichkov"
+//        })
+
+        mAuth.signOut()
     }
 }

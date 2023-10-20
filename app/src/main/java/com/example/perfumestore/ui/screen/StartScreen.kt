@@ -73,7 +73,7 @@ fun StartScreen(
 
                     // Profile
                     Image(
-                        painter = painterResource(id = R.drawable.towich_photo),
+                        painter = if(mViewModel.isLoggedIntoAccount()) painterResource(id = R.drawable.towich_photo) else painterResource(id = R.drawable.profile_icon),
                         contentDescription = "Your photo",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

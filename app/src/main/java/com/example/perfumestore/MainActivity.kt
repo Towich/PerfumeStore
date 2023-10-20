@@ -13,10 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.perfumestore.data.model.ProductItem
 import com.example.perfumestore.ui.screen.CartScreen
 import com.example.perfumestore.ui.screen.FinishOrderScreen
+import com.example.perfumestore.ui.screen.LoginScreen
 import com.example.perfumestore.ui.screen.ProductScreen
 import com.example.perfumestore.ui.screen.ProfileScreen
 import com.example.perfumestore.ui.screen.StartScreen
 import com.example.perfumestore.ui.theme.PerfumeStoreTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
 
@@ -27,6 +29,7 @@ class MainActivity : ComponentActivity() {
             PerfumeStoreTheme {
                 val navController = rememberNavController()
                 val mViewModel: MainViewModel = viewModel()
+
                 NavHost(
                     navController = navController,
                     startDestination = "Start",
@@ -71,10 +74,19 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("Profile"){
-                        ProfileScreen(
-                            mViewModel = mViewModel,
-                            navController = navController
-                        )
+                        if(mViewModel.isLoggedIntoAccount()){
+                            ProfileScreen(
+                                mViewModel = mViewModel,
+                                navController = navController
+                            )
+                        }
+                        else{
+                            LoginScreen(
+                                mViewModel = mViewModel,
+                                navController = navController
+                            )
+                        }
+
                     }
                 }
             }

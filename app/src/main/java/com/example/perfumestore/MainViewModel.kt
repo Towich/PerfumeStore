@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.perfumestore.data.model.ProductItem
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.StreamDownloadTask
@@ -79,5 +81,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         return bitmap
+    }
+
+    // Account functions
+    fun isLoggedIntoAccount(): Boolean = repository.isLoggedIntoAccount()
+
+    fun registerViaEmailPassword(email: String, password: String, onCompleted: (task: Task<AuthResult>) -> Unit) {
+        repository.registerViaEmailPassword(email, password, onCompleted)
+    }
+
+    fun signInViaEmailPassword(email: String, password: String, onCompleted: (task: Task<AuthResult>) -> Unit){
+        repository.signInViaEmailPassword(email, password, onCompleted)
+    }
+
+    fun getNameAccount(): String = repository.getNameAccount()
+    fun logOutFromAccount(){
+        repository.logOutFromAccount()
     }
 }

@@ -80,8 +80,12 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.2.2')
 
     // Declare the dependencies for the desired Firebase products without specifying versions
-    implementation("com.google.firebase:firebase-database-ktx")
+    implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    // Also add the dependency for the Google Play services library and specify its version
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Ktor
     implementation "io.ktor:ktor-client-okhttp:2.3.3"

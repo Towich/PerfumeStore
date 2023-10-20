@@ -1,6 +1,7 @@
 package com.example.perfumestore.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -26,7 +27,8 @@ fun FinishOrderScreen(
 ){
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -47,6 +49,7 @@ fun FinishOrderScreen(
             Text(
                 text = "Заказ оформлен",
                 style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(top = 75.dp)
@@ -55,6 +58,7 @@ fun FinishOrderScreen(
             Text(
                 text = "Ваш заказ оформлен, ожидайте подтверждения. Спасибо за покупку!",
                 style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontWeight = FontWeight.W400,
                 modifier = Modifier
                     .padding(start = 100.dp, end = 100.dp, top = 20.dp),
